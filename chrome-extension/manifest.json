@@ -1,0 +1,93 @@
+{
+    "manifest_version": 3,
+    "name": "My Chrome Extension",
+    "version": "1.0",
+    "description": "A brief description of my Chrome Extension",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "identity"
+    ],
+    "oauth2": {
+        "client_id": "a23cbec4da1d5270a30d",
+        "client_secret": "fba0b454f15eaf0646a8efa32c6f806b499a76c0",
+        "scopes": [
+            "user:email"
+        ]
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "static/js/main.a7476903.chunk.js",
+"static/js/2.37aaff86.chunk.js",
+"static/js/runtime-main.aeecb1a7.js",
+"static/js/main.3a837d0b.chunk.js",
+"static/js/3.66b46141.chunk.js",
+"static/js/2.87ccc007.chunk.js",
+"static/js/main.49edfccf.chunk.js",
+"static/js/2.f571706b.chunk.js",
+"static/js/2.93dbc671.chunk.js",
+"static/js/runtime-main.490c8f1e.js",
+"static/js/3.b7117f5a.chunk.js",
+"static/js/3.f909ef8c.chunk.js",
+"static/js/main.d5dd5711.chunk.js",
+"static/js/runtime-main.4e3c8088.js"
+
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "static/css/main.14e62676.chunk.css",
+"static/css/main.14e62676.chunk.css.map",
+"static/js/runtime-main.4e3c8088.js.map",
+"static/js/3.66b46141.chunk.js.map",
+"static/js/2.37aaff86.chunk.js.map",
+"static/js/main.a7476903.chunk.js",
+"static/js/2.37aaff86.chunk.js",
+"static/js/runtime-main.aeecb1a7.js",
+"static/js/main.d5dd5711.chunk.js.map",
+"static/js/runtime-main.aeecb1a7.js.map",
+"static/js/main.3a837d0b.chunk.js",
+"static/js/2.87ccc007.chunk.js.map",
+"static/js/runtime-main.490c8f1e.js.map",
+"static/js/3.66b46141.chunk.js",
+"static/js/2.87ccc007.chunk.js",
+"static/js/2.87ccc007.chunk.js.LICENSE.txt",
+"static/js/2.37aaff86.chunk.js.LICENSE.txt",
+"static/js/main.49edfccf.chunk.js",
+"static/js/2.f571706b.chunk.js",
+"static/js/2.93dbc671.chunk.js.LICENSE.txt",
+"static/js/3.b7117f5a.chunk.js.map",
+"static/js/2.93dbc671.chunk.js",
+"static/js/2.f571706b.chunk.js.LICENSE.txt",
+"static/js/runtime-main.490c8f1e.js",
+"static/js/main.49edfccf.chunk.js.map",
+"static/js/3.f909ef8c.chunk.js.map",
+"static/js/2.93dbc671.chunk.js.map",
+"static/js/3.b7117f5a.chunk.js",
+"static/js/3.f909ef8c.chunk.js",
+"static/js/main.d5dd5711.chunk.js",
+"static/js/main.a7476903.chunk.js.map",
+"static/js/main.3a837d0b.chunk.js.map",
+"static/js/runtime-main.4e3c8088.js",
+"static/js/2.f571706b.chunk.js.map",
+"static/media/overview.20faaa4f.png",
+"static/media/tagging.a4f4020b.png",
+"static/media/network.f7220782.jpg"
+
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "key": "AAAAB3NzaC1yc2EAAAADAQABAAABgQDLGZc/fKuks6wRwcyxWSNQYGtbAm9rGIMhl8FdUyophg8/YtPXQrWvSJp1bITtnTxRxuHUwQtuBq2wETOdcMKdOg/tvSc0M6TD6uKKhRdcG9hZ9VsK3vv3BkQhbNfJ3sfcTfYVb4qAA4OJOVc/HfSojOz/QtoW1cIRtkHVsyY2XPvUg8/hyBdsMPzbSdtzNfrMqpbBNTguJDm93u5wZkYkwCHlsT308HE1KLlqvwgML2EeX8RlYzwPo7iRVZLVm+oOKG94oNDsI0pSI4eToB92OtThO65r5V20fnMZSvMDirWfZzAiyJdX6iXfbjL4Lv9rC4w7wTIur9yfVws55cjOxKKHnixy/0Zpc/JpSsI4rdiyMXPN2SZARx/6Dwmg7heldFI/2qUfjP14taGiGo7Z6pLv1CzncUL57+FXeJzF/BXcGH0SZOtNvywdur2eEXba3VrBrVk9tOFa3ujHzNv3EAzb9hVy5kcjHHLMEwp4K0b+2aMDE2ahVTtTxN0KFl8="
+}

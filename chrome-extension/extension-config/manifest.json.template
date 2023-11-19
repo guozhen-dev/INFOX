@@ -1,0 +1,42 @@
+{
+    "manifest_version": 3,
+    "name": "My Chrome Extension",
+    "version": "1.0",
+    "description": "A brief description of my Chrome Extension",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "identity"
+    ],
+    "oauth2": {
+        "client_id": "a23cbec4da1d5270a30d",
+        "client_secret": "fba0b454f15eaf0646a8efa32c6f806b499a76c0",
+        "scopes": [
+            "user:email"
+        ]
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                {{jsfiles}}
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                {{files}}
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "key": "AAAAB3NzaC1yc2EAAAADAQABAAABgQDLGZc/fKuks6wRwcyxWSNQYGtbAm9rGIMhl8FdUyophg8/YtPXQrWvSJp1bITtnTxRxuHUwQtuBq2wETOdcMKdOg/tvSc0M6TD6uKKhRdcG9hZ9VsK3vv3BkQhbNfJ3sfcTfYVb4qAA4OJOVc/HfSojOz/QtoW1cIRtkHVsyY2XPvUg8/hyBdsMPzbSdtzNfrMqpbBNTguJDm93u5wZkYkwCHlsT308HE1KLlqvwgML2EeX8RlYzwPo7iRVZLVm+oOKG94oNDsI0pSI4eToB92OtThO65r5V20fnMZSvMDirWfZzAiyJdX6iXfbjL4Lv9rC4w7wTIur9yfVws55cjOxKKHnixy/0Zpc/JpSsI4rdiyMXPN2SZARx/6Dwmg7heldFI/2qUfjP14taGiGo7Z6pLv1CzncUL57+FXeJzF/BXcGH0SZOtNvywdur2eEXba3VrBrVk9tOFa3ujHzNv3EAzb9hVy5kcjHHLMEwp4K0b+2aMDE2ahVTtTxN0KFl8="
+}
