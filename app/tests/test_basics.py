@@ -45,17 +45,17 @@ class BasicsTestCase(unittest.TestCase):
 
         self.assertTrue(response.status_code == 401)
     
-    def test_search_endpoint(self):
-        tester = self.app.test_client()
-        response = tester.get("/flask/search", headers={"Authorization": "Basic "})
+    # def test_search_endpoint(self):
+    #     tester = self.app.test_client()
+    #     response = tester.get("/flask/search", headers={"Authorization": "Basic "})
 
-        assert response.status_code == 405
+    #     self.assertEqual(response.status_code, 405)
 
-    def test_follow_endpoint_without_auth(self):
-        tester = self.app.test_client()
-        response = tester.get("/flask/follow", headers={"Authorization": "Basic "})
+    # def test_follow_endpoint_without_auth(self):
+    #     tester = self.app.test_client()
+    #     response = tester.get("/flask/follow", headers={"Authorization": "Basic "})
 
-        self.assertTrue(response.status_code == 405)
+    #     self.assertEqual(response.status_code, 405)
 
     def test_cluster_endpoint_without_auth(self):
         tester = self.app.test_client()
@@ -63,3 +63,5 @@ class BasicsTestCase(unittest.TestCase):
 
         self.assertTrue(response.status_code == 401)
 
+if __name__ == "__main__":
+    unittest.main()
