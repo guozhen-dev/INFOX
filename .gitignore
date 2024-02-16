@@ -2,5 +2,7 @@ chrome-extension
 venv
 .tmp
 */.tmp
-
+__pycache__
+*/__pycache__
+__pycache__/*
 
