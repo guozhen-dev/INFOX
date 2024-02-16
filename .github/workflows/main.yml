@@ -1,0 +1,17 @@
+name: Client build test
+
+on: [push, pull_request]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['14.x', '16.x', '18.x']
+        
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up environment npm install
+        run: cd client && ./build.sh
+      - name: test the index.html is generated
+        run: test chrome-extension/index.html 
