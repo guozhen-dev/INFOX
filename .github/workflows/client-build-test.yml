@@ -1,13 +1,19 @@
 name: Client build test
 
-on: [push, pull_request]
+on:
+    push:
+        branches:
+          - "real"
+    pull_request:
+        branches:
+          - "master" 
     
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['6.x']
+        node-version: ['21.x']
         
     steps:
       - uses: actions/checkout@v4
