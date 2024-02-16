@@ -1,6 +1,12 @@
-name: Python package
+name: Backend Unit Test
 
-on: [push, pull_request]
+on:
+    push:
+        branches:
+          - "real"
+    pull_request:
+        branches:
+          - "master" 
     
 jobs:
   build:
