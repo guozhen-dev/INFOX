@@ -3,8 +3,10 @@ from datetime import datetime
 from flask import g, render_template, redirect, request, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 
+import requests
+import base64
+import json
 from . import auth
-
 from .. import github
 from ..models import User, Permission
 from ..analyse.util import localfile_tool
@@ -12,14 +14,45 @@ from ..analyse.util import localfile_tool
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
-    next_url = request.args.get("next") or url_for("main.index")
+    # Client login with a token
+    code = request.args.get("code")
+    if code:
+        # we got a code let's exchange it for an access token
+        data = {
+            "client_id": "8a79ee6701d1e06c6c58",
+            "client_secret": "secret",
+            "code": code,
+        }
+        # exchange the 'code' for an access token
+        res = requests.post(
+            url="https://github.com/login/oauth/access_token",
+            data=data,
+            headers={"Accept": "application/json"},
+        )
+        res_json = res.json()
+        access_token = res_json["access_token"]
 
-    # TODO: Set redirect URI based on environment
-    # return github.authorize(scope="user:email", redirect_uri="http://forks-insight.com/auth/callback?next=%s" % next_url)
-    return github.authorize(
-        scope="user:email",
-        redirect_uri="http://localhost:5000/auth/callback?next=%s" % next_url,
-    )
+        # get the user details using the access token
+        res = requests.get(
+            url="https://api.github.com/user",
+            headers={
+                "Accept": "application/json",
+                "Authorization": "token {}".format(access_token),
+            },
+        )
+        if res.status_code != 200:
+            raise AssertionError
+        res_json = res.json()
+    extension_id = "llmeodfaniafoeimehfbfmgdmbamalkn"
+    return_body = {
+        "username": res_json['name'],
+        "token": access_token
+    }
+    # now we encode the return body to send it back to the client
+    return_data = base64.b64encode(json.dumps(return_body).encode('ascii')).decode('ascii')
+    return redirect(f"https://{extension_id}.chromiumapp.org/{return_data}", code=302)
+
+
 
 
 @auth.route("/logout", methods=["GET", "POST"])
