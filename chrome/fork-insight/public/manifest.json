@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Fork Insight",
+    "version": "1.0",
+    "description": "A Chrome extension version of INFOX with React.",
+    "action": {
+      "default_popup": "index.html",
+      "default_icon": {
+        "192": "logo192.png",
+        "512": "logo512.png"
+      }
+    },
+    "icons": {
+      "192": "logo192.png",
+      "512": "logo512.png"
+    },
+    "permissions": ["activeTab", "storage", "identity"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA05nzYoJ/z7zkyX36v4Mnc+pQf20NtC5lE43evGJ8antw0mu0DHRYqkt3KlHxEF7iGo0VxFvxR6V98SN01TeN3j8XCveT+aKumfla6EuJO6xaDJVh5utPlZTBHAUMTldyhlNPgOTmEZorgqZIVryFJNEmPv4h9zMmleY9CAs8CFwFTESf47bMuGbECqyw3HeYMndjPAKR0ksSQ1nGIjWDQ91kW7+F1Uz14h2U7K1yWKfNq3MMFjODJmpLinjXnHaugJio7PxI87zPOzuEw/Q7Z3aGwE2Wm3mVw4Qsj3cOC0aThtrX3m8/ZkWpvElSqkafRNbNl3irUQXAt+Wp3OgYGwIDAQAB"
+  }
+  
