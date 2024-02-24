@@ -23,7 +23,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       # You can test your matrix by printing the current Python version
       - name: set up environment 
-        run: pip3 install -r requirements.txt
+        run: pip3 install -r app/requirements.txt
       - name: set up the backend app
         run: export FLASK_APP=app
       - name: Run the Basic Tests
