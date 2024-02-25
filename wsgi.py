@@ -6,4 +6,4 @@ CONFIGURE_MODE = "development"
 #CONFIGURE_MODE = "default"
 
 app = create_app(CONFIGURE_MODE)
-app.run(debug=True)
+app.run(debug=True, host="0.0.0.0")

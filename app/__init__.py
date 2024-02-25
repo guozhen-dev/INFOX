@@ -15,6 +15,7 @@ from .api.Auth import Auth
 from .api.ForkList import ForkList
 from .api.ForkClustering import ForkClustering
 from .db import initialize_db
+from flask_pymongo import PyMongo
 from .loginmanager import login_manager
 from .mail import mail
 from datetime import timedelta
@@ -62,8 +63,7 @@ def create_app(config_name):
     app.config["JWT_ACCESS_LIFESPAN"] = {"hours": 24}
     app.config["JWT_REFRESH_LIFESPAN"] = {"days": 30}
 
-    # setup github-flask
-    initialize_db(app)
+    db.initialize_db(app)
     bootstrap.init_app(app)
     mail.init_app(app)
     github.init_app(app)
