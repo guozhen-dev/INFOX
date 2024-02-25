@@ -4,15 +4,16 @@ import { useAuth } from "./AuthContext";
 
 
 const Logout = () => {
-    const {logout} = useAuth();
+    const {user, logout} = useAuth();
     function onClickLogout() {
+        console.log(user);
         logout();
     }
 
     return (
         <>
             <a onClick={onClickLogout}>
-                Logout 
+                Logout {user.username} 
             </a>
         </>
     );

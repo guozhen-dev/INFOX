@@ -8,18 +8,32 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider, useAuth } from './AuthContext';
 import Login from './Login';
 import Logout from './Logout';
+import Home from './Home';
+import Repositories from './Repositories';
+import { useState } from 'react';
 
 
 function RealApp() {
-  const {user} = useAuth();
+  const { user } = useAuth();
+  const pageNr = {
+    "Fork Insight": 0,
+    "Repositories": 1,
+    "Fork_Clustering": 2,
+  };
+  const [curr_page, setCurrPage] = useState(0);
+  function changePage(source) {
+    console.log(source.target.id);
+    setCurrPage(pageNr[source.target.id]);
+  }
   return (
-      <Navbar expand="sm" className="bg-body-tertiary">
+    <Container fluid style={{ padding: 0 }}>
+      <Navbar expand="sm" bg="primary" data-bs-theme="dark" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand href="#home">Fork Insight</Navbar.Brand>
+          <Navbar.Brand onClick={changePage} id='Fork Insight'>Fork Insight</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
             <Nav>
-              <Nav.Link href="#home">Repositories</Nav.Link>
+              <Nav.Link onClick={changePage} id='Repositories'>Repositories</Nav.Link>
               <Nav.Link href="#link">Import Current</Nav.Link>
               <NavDropdown title="More Functions" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Fork Clustering</NavDropdown.Item>
@@ -33,6 +47,11 @@ function RealApp() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <Container fluid style={{ padding: 0 }}>
+        {curr_page == 0 ? <Home /> : null}
+        {curr_page == 1 ? <Repositories /> : null}
+      </Container>
+    </Container>
   );
 }
 

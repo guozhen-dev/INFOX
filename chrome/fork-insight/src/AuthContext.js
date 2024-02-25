@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   // Simulate a login function
   const login = (userData) => {
-    console.log("Setuser" + userData);
+    console.log(userData);
     setUser(userData);
   };
 
