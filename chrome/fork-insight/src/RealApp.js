@@ -29,7 +29,7 @@ function RealApp() {
     <Container fluid style={{ padding: 0 }}>
       <Navbar expand="sm" bg="primary" data-bs-theme="dark" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand onClick={changePage} id='Fork Insight'>Fork Insight</Navbar.Brand>
+          <Navbar.Brand onClick={changePage} id='Fork Insight' style={{cursor: 'pointer'}}>Fork Insight</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
             <Nav>
