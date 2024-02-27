@@ -1,0 +1,97 @@
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { AuthProvider, useAuth } from './AuthContext';
+import BgImage from "./img/network.jpg"
+import Button from 'react-bootstrap/Button';
+import Form from  'react-bootstrap/Form';
+import { Box, Container, useScrollTrigger } from '@mui/material';
+import { useEffect, useState } from 'react';
+
+function FollowRepo() {
+
+  const followPageStyle = { 
+    height: '100%',
+    width: '100%',
+    backgroundImage: `url(${BgImage})`,
+    backgroundSize: 'cover',
+    backgroundPositionX: 'center',
+  };
+
+  const [currentRepoUrl, setCurrentRepoUrl] = useState(null);
+  const handleChangeUrl = ({target:{value}}) => {setCurrentRepoUrl(value);};
+  const [currentRepoName, setCurrentRepoName] = useState(null);
+  const handlechangeCurrentRepoName = ({target:{value}}) => {setCurrentRepoName(value)};
+
+  const [disableSubmit, setDisableSubmit] = useState(true);
+  const [manualUrl, setManualUrl] = useState(false);
+
+  function flipManualUrl() {
+    setManualUrl(!manualUrl);
+  }
+
+  useEffect(() => {
+    try{
+      let gitUrl = new URL(currentRepoUrl);
+      if (gitUrl.hostname == "github.com") {
+        setDisableSubmit(false);
+      } else {
+        setDisableSubmit(true);
+      }
+    }
+    catch {
+      setDisableSubmit(true);
+    }
+     
+  }, [currentRepoUrl]);
+
+  useEffect(() => {
+    let currentUrl = chrome.tabs.query({
+      active: true, 
+      lastFocusedWindow: true
+    }, tabs => {
+      let currentUrl = new URL(tabs[0].url);
+      if (currentUrl.hostname == "github.com") {
+        setCurrentRepoUrl(tabs[0].url);
+        setCurrentRepoName(currentUrl.toString().split('/').pop());
+        setDisableSubmit(false);
+        debugger;
+      } else {
+        setCurrentRepoUrl("Warning: You are not currently on a GitHub Page.");
+        setCurrentRepoName("Warning: You are not currently on a GitHub Page.");
+        setDisableSubmit(true);
+      }
+    })
+  }, []);
+
+  return (
+    <Container style={{marginTop: 20}}>
+      <Form>
+        <Form.Group className="mb-3" controlId="currentRepoUrl">
+          <Form.Label>Current Page Url</Form.Label>
+          <Form.Control type="text" value={currentRepoUrl} onChange={handleChangeUrl} placeholder="" disabled={!manualUrl}/>
+          <Form.Text className="text-muted">
+            Please make sure this shows the GitHub URL as in your browser.
+          </Form.Text>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="currentRepoInfo" hidden={manualUrl}>
+          <Form.Label>Git Repo Name</Form.Label>
+          <Form.Control type="text" value={currentRepoName} onChange={handlechangeCurrentRepoName} placeholder="" disabled={!manualUrl}/>
+          <Form.Text className="text-muted">
+            Please make sure this shows the GitHub Repo Name as in your browser.
+          </Form.Text>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="customizeGitUrl">
+          <Form.Check type="checkbox" checked={manualUrl} onChange={flipManualUrl} label="Manual URL input" />
+          <Form.Text className="text-muted">
+            Check this if you want to manually input a Github URL.
+          </Form.Text>
+        </Form.Group>
+        <Button variant="primary" type="submit" disabled={disableSubmit}>
+          Follow
+        </Button>
+      </Form>
+      </Container>
+  );
+}
+
+export default FollowRepo;

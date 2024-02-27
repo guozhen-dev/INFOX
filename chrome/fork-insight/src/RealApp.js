@@ -10,7 +10,9 @@ import Login from './Login';
 import Logout from './Logout';
 import Home from './Home';
 import Repositories from './Repositories';
+import FollowRepo from './FollowRepo';
 import { useState } from 'react';
+
 
 
 function RealApp() {
@@ -18,7 +20,8 @@ function RealApp() {
   const pageNr = {
     "Fork Insight": 0,
     "Repositories": 1,
-    "Fork_Clustering": 2,
+    "Follow_Repo": 2,
+    "Fork_Clustering": 3,
   };
   const [curr_page, setCurrPage] = useState(0);
   function changePage(source) {
@@ -34,7 +37,7 @@ function RealApp() {
           <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
             <Nav>
               <Nav.Link onClick={changePage} id='Repositories'>Repositories</Nav.Link>
-              <Nav.Link href="#link">Import Current</Nav.Link>
+              <Nav.Link onClick={changePage} id='Follow_Repo'>Import Current</Nav.Link>
               <NavDropdown title="More Functions" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Fork Clustering</NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -50,6 +53,7 @@ function RealApp() {
       <Container fluid style={{ padding: 0 }}>
         {curr_page == 0 ? <Home /> : null}
         {curr_page == 1 ? <Repositories /> : null}
+        {curr_page == 2 ? <FollowRepo /> : null}
       </Container>
     </Container>
   );
