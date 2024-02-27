@@ -11,11 +11,11 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import RemoveButton from "./common/RemoveButton";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import { PRIMARY, REMOVE, TERTIARY } from "./common/constants";
 // import { SECONDARY, TERTIARY, PRIMARY } from "./common/constants";
 // import { deleteUserRepository } from "./repository";
-import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 // import { useNavigate } from "react-router";
-import { PRIMARY, REMOVE, TERTIARY } from "./common/constants";
 
 const FollowedRepositoryCard = ({
   repo,

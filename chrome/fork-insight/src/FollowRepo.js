@@ -1,21 +1,11 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AuthProvider, useAuth } from './AuthContext';
-import BgImage from "./img/network.jpg"
 import Button from 'react-bootstrap/Button';
 import Form from  'react-bootstrap/Form';
-import { Box, Container, useScrollTrigger } from '@mui/material';
+import { Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 function FollowRepo() {
-
-  const followPageStyle = { 
-    height: '100%',
-    width: '100%',
-    backgroundImage: `url(${BgImage})`,
-    backgroundSize: 'cover',
-    backgroundPositionX: 'center',
-  };
 
   const [currentRepoUrl, setCurrentRepoUrl] = useState(null);
   const handleChangeUrl = ({target:{value}}) => {setCurrentRepoUrl(value);};
@@ -32,7 +22,7 @@ function FollowRepo() {
   useEffect(() => {
     try{
       let gitUrl = new URL(currentRepoUrl);
-      if (gitUrl.hostname == "github.com") {
+      if (gitUrl.hostname === "github.com") {
         setDisableSubmit(false);
       } else {
         setDisableSubmit(true);
@@ -45,12 +35,12 @@ function FollowRepo() {
   }, [currentRepoUrl]);
 
   useEffect(() => {
-    let currentUrl = chrome.tabs.query({
+    chrome.tabs.query({
       active: true, 
       lastFocusedWindow: true
     }, tabs => {
       let currentUrl = new URL(tabs[0].url);
-      if (currentUrl.hostname == "github.com") {
+      if (currentUrl.hostname === "github.com") {
         setCurrentRepoUrl(tabs[0].url);
         setCurrentRepoName(currentUrl.toString().split('/').pop());
         setDisableSubmit(false);

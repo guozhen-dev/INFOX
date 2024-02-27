@@ -1,11 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AuthProvider, useAuth } from './AuthContext';
+import { useAuth } from './AuthContext';
 import Login from './Login';
 import Logout from './Logout';
 import Home from './Home';
@@ -51,9 +50,9 @@ function RealApp() {
         </Container>
       </Navbar>
       <Container fluid style={{ padding: 0 }}>
-        {curr_page == 0 ? <Home /> : null}
-        {curr_page == 1 ? <Repositories /> : null}
-        {curr_page == 2 ? <FollowRepo /> : null}
+        {curr_page === 0 ? <Home /> : null}
+        {curr_page === 1 ? <Repositories /> : null}
+        {curr_page === 2 ? <FollowRepo /> : null}
       </Container>
     </Container>
   );

@@ -1,21 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import { getUserFollowedRepositories } from "./repository";
-import { AuthProvider, useAuth } from './AuthContext';
-import Login from './Login';
-import Logout from './Logout';
+import { useAuth } from './AuthContext';
 import { Box, Pagination, Grid, Typography } from "@mui/material";
 import Loading from "./common/Loading";
 import Title from "./common/Title";
 import isEmpty from "lodash/isEmpty";
 import FollowedRepositoryCard from './FollowedRepositoryCard';
-// import SearchAndFilter from "./common/SearchAndFilter";
 import React, { useEffect, useCallback, useState } from "react";
+// import SearchAndFilter from "./common/SearchAndFilter";
+// import { getUserFollowedRepositories } from "./repository";
 
 
 function Repositories() {
