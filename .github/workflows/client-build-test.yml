@@ -18,6 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: set up environment npm install
-        run: cd client && ./build.sh
+        run: cd chrome/fork-insight && ./build.sh
       - name: test the index.html is generated
         run: test chrome-extension/index.html 
