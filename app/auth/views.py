@@ -50,6 +50,7 @@ def login():
     extension_id = "bhnejeodnednfpfclmdkcgcokcahejjb"
     return_body = {
         "username": res_json['name'],
+        "login": res_json['login'],
         "token": access_token
     }
     # now we encode the return body to send it back to the client
@@ -60,6 +61,8 @@ def login():
     if user:
         user.github_access_token = access_token
         user.last_seen = datetime.datetime.now()
+        user.save()
+    # Otherwise, we create a new user.
     else:
         new_user = User()
         new_user.username = res_json['login']
