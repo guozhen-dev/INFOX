@@ -12,9 +12,16 @@ const Login = () => {
         }, function(redirectURL) {
             // return url should be in the form of https://<chrome-extension-id>.chromiumapp.org/<base64-encoded-userinfo-json>
             let url = new URL(redirectURL);
-            let userInfo = JSON.parse(atob(url.pathname.slice(1)));
-            if (userInfo) {
-                login(userInfo);
+            try{
+                let userInfo = JSON.parse(atob(url.pathname.slice(1)));
+                if (userInfo) {
+                    login(userInfo);
+                }else{
+                    alert("Login Failed.");
+                }
+            } catch {
+                // Should never reached here, given if the redirectURL is incorrect chrome will reject this.
+                alert("Login Failed. Internal Error.");
             }
         });
     }

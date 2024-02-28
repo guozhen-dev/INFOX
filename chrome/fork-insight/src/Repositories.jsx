@@ -8,9 +8,21 @@ import Title from "./common/Title";
 import isEmpty from "lodash/isEmpty";
 import FollowedRepositoryCard from './FollowedRepositoryCard';
 import React, { useEffect, useCallback, useState } from "react";
-// import SearchAndFilter from "./common/SearchAndFilter";
-// import { getUserFollowedRepositories } from "./repository";
+import axios from "axios";
+import { SERVER } from './common/constants';
 
+// import SearchAndFilter from "./common/SearchAndFilter";
+
+const getUserFollowedRepositories = async (userInfo) => {
+  const response = await axios({
+    method: "GET",
+    url: SERVER + "/flask/followed",
+    headers: {
+      'Authorization': JSON.stringify(userInfo)
+    }
+  });
+  return response.data;
+};
 
 function Repositories() {
   const { user } = useAuth();
@@ -94,66 +106,8 @@ function Repositories() {
   }, [filters, search, followedRepositories]);
 
   const fetchFollowedRepositories = useCallback(async () => {
-    // const response = await getUserFollowedRepositories();
-    const response = [{
-      'language': 'Python',
-      'description': 'A web scraping tool',
-      'timesForked': 150,
-      'repo': 'WebScraper1',
-      'updated': '2024-02-25'
-    },
-    {
-      'language': 'JavaScript',
-      'description': 'A React-based UI library',
-      'timesForked': 300,
-      'repo': 'ReactUI2',
-      'updated': '2024-02-25'
-    },
-    {
-      'language': 'Python',
-      'description': 'A web scraping tool',
-      'timesForked': 150,
-      'repo': 'WebScraper3',
-      'updated': '2024-02-25'
-    },
-    {
-      'language': 'JavaScript',
-      'description': 'A React-based UI library',
-      'timesForked': 300,
-      'repo': 'ReactUI4',
-      'updated': '2024-02-25'
-    },
-    {
-      'language': 'Python',
-      'description': 'A web scraping tool',
-      'timesForked': 150,
-      'repo': 'WebScraper5',
-      'updated': '2024-02-25'
-    },
-    {
-      'language': 'JavaScript',
-      'description': 'A React-based UI library',
-      'timesForked': 300,
-      'repo': 'ReactUI6',
-      'updated': '2024-02-25'
-    },
-    {
-      'language': 'Python',
-      'description': 'A web scraping tool',
-      'timesForked': 150,
-      'repo': 'WebScraper7',
-      'updated': '2024-02-25'
-    },
-    {
-      'language': 'JavaScript',
-      'description': 'A React-based UI library',
-      'timesForked': 300,
-      'repo': 'ReactUI8',
-      'updated': '2024-02-25'
-    }];
-    console.log("followed projects", response);
 
-    // setFollowedRepositories(response.data);
+    const response = await getUserFollowedRepositories(user);
     setFollowedRepositories(response);
     console.log("res", response);
 

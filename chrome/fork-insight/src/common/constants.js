@@ -6,3 +6,4 @@ export const PRIMARY = "#487c8c";
 export const SECONDARY = "#789cac";
 export const TERTIARY = "#d8ecf4";
 export const REMOVE = "#f5f5f5";
+export const SERVER = "http://infox.onthewifi.com:5000"

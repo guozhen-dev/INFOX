@@ -4,19 +4,43 @@ import Button from 'react-bootstrap/Button';
 import Form from  'react-bootstrap/Form';
 import { Container } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
+import { SERVER } from './common/constants';
 
 function FollowRepo() {
+
+  // Global states
+  const {user} = useAuth();
 
   const [currentRepoUrl, setCurrentRepoUrl] = useState(null);
   const handleChangeUrl = ({target:{value}}) => {setCurrentRepoUrl(value);};
   const [currentRepoName, setCurrentRepoName] = useState(null);
   const handlechangeCurrentRepoName = ({target:{value}}) => {setCurrentRepoName(value)};
-
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [manualUrl, setManualUrl] = useState(false);
 
   function flipManualUrl() {
     setManualUrl(!manualUrl);
+  }
+
+  function submitHandler(e) {
+    e.preventDefault(); 
+    console.log(user);
+    if (!user) {
+      alert("Please login before follow a repository.");
+    }
+    fetch(SERVER + '/flask/follow',{
+      method: 'POST',
+      body: JSON.stringify({
+        git_url: currentRepoUrl,
+        user_info: user
+      })
+    }).then(
+      (resp)=> {
+        console.log(resp.json());
+      }
+    )
+    
   }
 
   useEffect(() => {
@@ -55,7 +79,7 @@ function FollowRepo() {
 
   return (
     <Container style={{marginTop: 20}}>
-      <Form>
+      <Form onSubmit={submitHandler}>
         <Form.Group className="mb-3" controlId="currentRepoUrl">
           <Form.Label>Current Page Url</Form.Label>
           <Form.Control type="text" value={currentRepoUrl} onChange={handleChangeUrl} placeholder="" disabled={!manualUrl}/>
