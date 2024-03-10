@@ -76,8 +76,7 @@ def create_app(config_name):
 
     api.add_resource(
         FollowedRepositories,
-        "/flask/followed",
-        resource_class_kwargs={"jwt": jwt},
+        "/flask/followed"
     )
     api.add_resource(
         ImportRepositories,
@@ -93,7 +92,6 @@ def create_app(config_name):
     api.add_resource(
         FollowRepository,
         "/flask/follow",
-        resource_class_kwargs={"jwt": jwt},
     )
     api.add_resource(
         ForkClustering, "/flask/cluster", resource_class_kwargs={"jwt": jwt}
@@ -106,7 +104,7 @@ def create_app(config_name):
     )
 
     # TODO: get correct host, broker and backend depending on environment
-    redis_host = "redis://redis:6379/0"
+    redis_host = "redis://localhost:6379/0"
     celery.conf.broker_url = redis_host
     celery.conf.result_backend = redis_host
     # celery.init_app(app)

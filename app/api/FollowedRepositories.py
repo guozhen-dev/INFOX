@@ -7,13 +7,18 @@ from flask import request
 
 
 class FollowedRepositories(Resource):
-    def __init__(self, jwt):
-        self.jwt = jwt
 
-    @jwt_required()
+
     def get(self):
-        current_user = get_jwt_identity()
-        _user = User.objects(username=current_user).first()
+        req_data = json.loads(request.headers.get('Authorization'))
+        print(request.headers)
+        current_user = req_data.get('login')
+        github_access_token = req_data.get('token')
+        print(current_user)
+        print(github_access_token)
+        _user = User.objects(username=current_user, github_access_token=github_access_token).first()
+        if not _user:
+            return "Unauthorized Access", 403
 
         project_list = Project.objects(project_name__in=_user.followed_projects)
 
@@ -35,14 +40,16 @@ class FollowedRepositories(Resource):
             )
         return return_list
 
-    @jwt_required()
     def delete(self):
         req_data = request.get_json()
         repo = req_data.get("repo")
-
-        current_user = get_jwt_identity()
-        _user = User.objects(username=current_user).first()
-
+        auth_data = json.loads(request.headers.get('Authorization'))
+        current_user = auth_data.get('login')
+        github_access_token = auth_data.get('token')
+        print(request.headers)
+        print(current_user, github_access_token)
+        _user = User.objects(username=current_user, github_access_token=github_access_token).first()
+        if not _user:
+            return "Unauthorized Access", 403
         _user.update(pull__followed_projects=repo)
-
         return True
