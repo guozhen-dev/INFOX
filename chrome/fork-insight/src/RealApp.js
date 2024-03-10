@@ -10,12 +10,19 @@ import Logout from './Logout';
 import Home from './Home';
 import Repositories from './Repositories';
 import FollowRepo from './FollowRepo';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
 function RealApp() {
-  const { user } = useAuth();
+  const { user, login } = useAuth();
+  useEffect(() => {
+    chrome.storage.sync.get('user', function (result) {
+      if (result.user) {
+        login(result.user);
+      }
+    });
+  }, []);
   const pageNr = {
     "Fork Insight": 0,
     "Repositories": 1,
@@ -31,7 +38,7 @@ function RealApp() {
     <Container fluid style={{ padding: 0 }}>
       <Navbar expand="sm" bg="primary" data-bs-theme="dark" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand onClick={changePage} id='Fork Insight' style={{cursor: 'pointer'}}>Fork Insight</Navbar.Brand>
+          <Navbar.Brand onClick={changePage} id='Fork Insight' style={{ cursor: 'pointer' }}>Fork Insight</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
             <Nav>
