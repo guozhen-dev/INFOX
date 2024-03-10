@@ -1,11 +1,14 @@
 import RealApp from "./RealApp";
 import { AuthProvider } from "./AuthContext";
+import { PageProvider } from "./PageContext";
 import { React } from "react";
 
 function App() {
     return (
         <AuthProvider>
-            <RealApp />
+            <PageProvider>
+                <RealApp />
+            </PageProvider>
         </AuthProvider>
     );
 }   

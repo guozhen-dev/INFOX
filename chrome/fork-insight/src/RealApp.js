@@ -10,12 +10,12 @@ import Logout from './Logout';
 import Home from './Home';
 import Repositories from './Repositories';
 import FollowRepo from './FollowRepo';
-import { useEffect, useState } from 'react';
-
-
+import { createContext, useEffect } from 'react';
+import { usePage } from './PageContext';
 
 function RealApp() {
   const { user, login } = useAuth();
+  const { curr_page, pageNr, setCurrPage } = usePage();
   useEffect(() => {
     chrome.storage.sync.get('user', function (result) {
       if (result.user) {
@@ -23,13 +23,7 @@ function RealApp() {
       }
     });
   }, []);
-  const pageNr = {
-    "Fork Insight": 0,
-    "Repositories": 1,
-    "Follow_Repo": 2,
-    "Fork_Clustering": 3,
-  };
-  const [curr_page, setCurrPage] = useState(0);
+
   function changePage(source) {
     console.log(source.target.id);
     setCurrPage(pageNr[source.target.id]);
