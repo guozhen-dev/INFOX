@@ -41,7 +41,18 @@ function Repositories() {
 
   const PER_PAGE = 5;
 
-  const onClickRemoveRepo = (value) => {
+  const onClickRemoveRepo = async (value) => {
+    alert(value);
+    const response = await axios({
+      method: "DELETE",
+      url: SERVER + "/flask/followed",
+      headers: {
+        'Authorization': JSON.stringify(user)
+      },
+      data: {
+        repo: value
+      }
+    });
     setFollowedRepositories(
       followedRepositories.filter((repo) => repo.repo !== value)
     );
