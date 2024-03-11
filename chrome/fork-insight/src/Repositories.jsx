@@ -42,7 +42,6 @@ function Repositories() {
   const PER_PAGE = 5;
 
   const onClickRemoveRepo = async (value) => {
-    alert(value);
     const response = await axios({
       method: "DELETE",
       url: SERVER + "/flask/followed",
