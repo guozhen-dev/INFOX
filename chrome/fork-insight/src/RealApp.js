@@ -12,6 +12,7 @@ import Repositories from './Repositories';
 import FollowRepo from './FollowRepo';
 import { createContext, useEffect } from 'react';
 import { usePage } from './PageContext';
+import ForkList from './Forklist';
 
 function RealApp() {
   const { user, login } = useAuth();
@@ -54,6 +55,7 @@ function RealApp() {
         {curr_page === 0 ? <Home /> : null}
         {curr_page === 1 ? <Repositories /> : null}
         {curr_page === 2 ? <FollowRepo /> : null}
+        {curr_page === 3 ? <ForkList /> : null}
       </Container>
     </Container>
   );

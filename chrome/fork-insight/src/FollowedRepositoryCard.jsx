@@ -16,6 +16,7 @@ import { PRIMARY, REMOVE, TERTIARY } from "./common/constants";
 // import { SECONDARY, TERTIARY, PRIMARY } from "./common/constants";
 // import { deleteUserRepository } from "./repository";
 // import { useNavigate } from "react-router";
+import { usePage } from './PageContext';
 
 const FollowedRepositoryCard = ({
   repo,
@@ -31,6 +32,8 @@ const FollowedRepositoryCard = ({
     onClickRemove(repo);
   };
 
+  const { pageNr, pageParam, setCurrPage, setPageParam } = usePage();
+
   // const navigate = useNavigate();
 
   const navigateToFork = () => {
@@ -39,6 +42,8 @@ const FollowedRepositoryCard = ({
   };
 
   const setCompareRepo = () => {
+    setCurrPage(pageNr['Fork_List']);
+    setPageParam(repo);
     // navigateToFork();
   };
 

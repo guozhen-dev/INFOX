@@ -13,12 +13,15 @@ export const PageProvider = ({ children }) => {
     "Fork Insight": 0,
     "Repositories": 1,
     "Follow_Repo": 2,
-    "Fork_Clustering": 3,
+    "Fork_List": 3,
   };
+  const [pageParam, setPageParam]= useState(null);
   const value = {
     curr_page,
     pageNr,
-    setCurrPage
+    pageParam,
+    setCurrPage,
+    setPageParam
   };
 
   return <PageContext.Provider value={value}>{children}</PageContext.Provider>;
