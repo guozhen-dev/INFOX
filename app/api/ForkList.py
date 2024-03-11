@@ -184,11 +184,12 @@ class ForkList(Resource):
 
 
     
-    @jwt_required()
     def post(self):
 
-        current_user = get_jwt_identity()
-        _user = User.objects(username=current_user).first()
+        auth_data = json.loads(request.headers.get("Authorization"))
+        current_user = auth_data.get('login')
+        current_token = auth_data.get('token')
+        _user = User.objects(username=current_user, github_access_token=current_token).first()
 
         req_data = request.get_json()
         repoName = req_data.get("repo")
@@ -217,12 +218,13 @@ class ForkList(Resource):
         )
         return {"forks": return_list}
 
-    @jwt_required()
     def get(self):
-        current_user = get_jwt_identity()
-        _user = User.objects(username=current_user).first()
+        print(request.headers)
+        auth_data = json.loads(request.headers.get("Authorization"))
+        current_user = auth_data.get('login')
+        current_token = auth_data.get('token')
+        _user = User.objects(username=current_user, github_access_token=current_token).first()
 
         repoName = request.args.get("repo")
         repo = repoName
-
         return ProjectFork.objects(project_name=repo).count()

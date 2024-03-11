@@ -46,10 +46,9 @@ class FollowedRepositories(Resource):
         auth_data = json.loads(request.headers.get('Authorization'))
         current_user = auth_data.get('login')
         github_access_token = auth_data.get('token')
-        print(request.headers)
-        print(current_user, github_access_token)
         _user = User.objects(username=current_user, github_access_token=github_access_token).first()
         if not _user:
             return "Unauthorized Access", 403
         _user.update(pull__followed_projects=repo)
+        _user.save()
         return True
