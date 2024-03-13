@@ -37,6 +37,7 @@ import Dialog from '@mui/material/Dialog';
 import isEmpty from "lodash/isEmpty";
 import { usePage } from "./PageContext";
 import { useAuth } from "./AuthContext";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -120,43 +121,44 @@ const headCells = [
     id: "num_changed_files",
     numeric: false,
     disablePadding: false,
-    label: "# Changed Files",
+    label: "Changed Files",
   },
-  {
-    id: "changed_files",
-    numeric: false,
-    disablePadding: false,
-    label: "File List",
-  },
+  // {
+  //   id: "changed_files",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "File List",
+  // },
   {
     id: "num_changed_lines",
     numeric: false,
     disablePadding: false,
-    label: "# Changed Lines",
+    label: "Changed Lines",
   },
   {
     id: "total_commit_number",
     numeric: false,
     disablePadding: false,
-    label: "# Commits",
+    label: "Commits",
   },
-  {
-    id: "keywords",
-    numeric: false,
-    disablePadding: false,
-    label: "Keywords",
-  },
+  // {
+  //   id: "keywords",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Keywords",
+  // },
   {
     id: "last_committed_time",
     numeric: false,
     disablePadding: false,
-    label: "Last Commit Time",
-  }, {
-    id: "created_time",
-    numeric: false,
-    disablePadding: false,
-    label: "Creation Date",
-  },
+    label: "Last Commit",
+  }
+  // , {
+  //   id: "created_time",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Creation Date",
+  // },
 ];
 
 function EnhancedTableHead(props) {
@@ -261,7 +263,7 @@ const EnhancedTableToolbar = (props) => {
 
       )}
 
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <>
           <Tooltip title="Delete">
             <IconButton onClick={props.onDelete}>
@@ -276,7 +278,7 @@ const EnhancedTableToolbar = (props) => {
             <FilterListIcon />
           </IconButton>
         </Tooltip>
-      )}
+      )} */}
     </Toolbar>
   );
 };
@@ -443,7 +445,7 @@ const EnhancedTable = ({ data }) => {
   
 
   const isSelected = (fork) => selected.indexOf(fork) !== -1;
-  const { pageParam, setPageParam } = usePage();
+  const { pageParam, setPageParam }= usePage();
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -652,10 +654,10 @@ const EnhancedTable = ({ data }) => {
             </Box>
             : null}
         </Box>
-        <EnhancedTableToolbar
+        {/* <EnhancedTableToolbar
           numSelected={selected.length}
           onDelete={handleDelete}
-        />
+        /> */}
         {selected.length > 0 && <Button onClick={handleCompareButton}>Compare Selected Forks</Button>}
 
         <TableContainer>
@@ -684,7 +686,6 @@ const EnhancedTable = ({ data }) => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -698,6 +699,7 @@ const EnhancedTable = ({ data }) => {
                           inputProps={{
                             "aria-labelledby": labelId,
                           }}
+                          onClick={(event) => handleClick(event, row)}
                         />
                       </TableCell>
                       <TableCell
@@ -711,23 +713,28 @@ const EnhancedTable = ({ data }) => {
                       <TableCell align="left">
                         {row.num_changed_files}
                       </TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         {row.parsed_files}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left">
                         {row.num_changed_lines}
                       </TableCell>
                       <TableCell align="left">
                         {row.total_commit_number}
                       </TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         {row.parsed_words}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left">
                         {row.last_committed_time}
                       </TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         {row.created_time}
+                      </TableCell> */}
+                      <TableCell align="left">
+                        <Button size="small">
+                          <ExpandMoreIcon sx={{ color: "black" }} />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -735,7 +742,7 @@ const EnhancedTable = ({ data }) => {
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: 53 * emptyRows,
+                    height: 40 * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />
@@ -754,7 +761,7 @@ const EnhancedTable = ({ data }) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      {/* <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <TextField onKeyPress={(ev) => {
             if (ev.key === 'Enter') {
@@ -773,9 +780,7 @@ const EnhancedTable = ({ data }) => {
           }} sx={{ marginLeft: 1 }} placeholder="Search for custom file name" onChange={updateFileNameSearch}></TextField>
           <Button onClick={handleFileNameSearch}>Search</Button>
         </Box>
-
-
-      </Box>
+      </Box> */}
       <ComparisonDialogue open={open} commonFiles={commonFiles} commonKeywords={commonKeywords} onClose={handleClose}></ComparisonDialogue>
 
     </Box>
