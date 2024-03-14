@@ -37,7 +37,8 @@ import Dialog from '@mui/material/Dialog';
 import isEmpty from "lodash/isEmpty";
 import { usePage } from "./PageContext";
 import { useAuth } from "./AuthContext";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -309,6 +310,7 @@ const EnhancedTable = ({ data }) => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("num_changed_files");
   const [selected, setSelected] = useState([]);
+  const [expanded, setExpanded] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [visibleRows, setVisibleRows] = useState(rows);
@@ -338,6 +340,26 @@ const EnhancedTable = ({ data }) => {
       return;
     }
     setSelected([]);
+  };
+
+  const handleExpand = (event, row) => {
+    const expandedIndex = expanded.indexOf(row);
+    let newExpanded = [];
+
+    if (expandedIndex === -1) {
+      newExpanded = newExpanded.concat(expanded, row);
+    } else if (expandedIndex === 0) {
+      newExpanded = newExpanded.concat(expanded.slice(1));
+    } else if (expandedIndex === expanded.length - 1) {
+      newExpanded = newExpanded.concat(expanded.slice(0, -1));
+    } else if (expandedIndex > 0) {
+      newExpanded = newExpanded.concat(
+        expanded.slice(0, expandedIndex),
+        expanded.slice(expandedIndex + 1)
+      );
+    }
+
+    setExpanded(newExpanded);
   };
 
   const handleClick = (event, row) => {
@@ -445,7 +467,9 @@ const EnhancedTable = ({ data }) => {
   
 
   const isSelected = (fork) => selected.indexOf(fork) !== -1;
+  const isExpanded = (fork) => expanded.indexOf(fork) !== -1;
   const { pageParam, setPageParam }= usePage();
+  // const [isExpanded, setIsExpanded] = useState(false);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -682,8 +706,10 @@ const EnhancedTable = ({ data }) => {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const isItemexpended = isExpanded(row);
 
                   return (
+                    <>
                     <TableRow
                       hover
                       role="checkbox"
@@ -732,11 +758,18 @@ const EnhancedTable = ({ data }) => {
                         {row.created_time}
                       </TableCell> */}
                       <TableCell align="left">
-                        <Button size="small">
-                          <ExpandMoreIcon sx={{ color: "black" }} />
+                        <Button size="small" onClick={(event) => handleExpand(event, row)}>
+                        {isItemexpended ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </Button>
                       </TableCell>
                     </TableRow>
+                    {isItemexpended && (
+                      <TableRow>
+                        <TableCell padding="checkbox" />
+                        <TableCell colSpan="6"><b>AI Summary:</b> </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                   );
                 })}
               {emptyRows > 0 && (
