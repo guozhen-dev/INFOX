@@ -39,6 +39,8 @@ import { usePage } from "./PageContext";
 import { useAuth } from "./AuthContext";
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import ChatBot  from './react-simple-chatbot/ChatBot';
+import { ThemeProvider } from 'styled-components';
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -175,6 +177,58 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property);
   };
 
+  const steps = [
+    {
+        id: '0',
+        message: 'Hello, what can I do for you today?',
+ 
+        // This calls the next id
+        // i.e. id 1 in this case
+        trigger: '1',
+    }, {
+        id: '1',
+ 
+        // This message appears in
+        // the bot chat bubble
+        user: true,
+        trigger: '2'
+    }, {
+        id: '2',
+ 
+        // Here we want the user
+        // to enter input
+        message: 'Considering the code differences and information given, you should focus on the fork located at gitpod.io/openvscode-server. This fork primarily concentrates on enhancing the remote connectivity of the VS Code server, in addition to implementing several bug fixes and front-end modifications.',
+        trigger: '3',
+    }, {
+        id: '3',
+        user: true,
+        trigger: 4
+    }, {
+        id: '4',
+        message: 'Sure, please let me know if you need any further assistance.',
+        end: true
+    }
+];
+
+const theme = {
+  background: '#C9FF8F',
+  fontFamily: 'Arial',
+  headerBgColor: '#197B22',
+  headerFontSize: '20px',
+  botBubbleColor: '#0F3789',
+  headerFontColor: 'white',
+  botFontColor: 'white',
+  userBubbleColor: '#FF5733',
+  userFontColor: 'white',
+  fontSize: '5px',
+};
+
+// Set some properties of the bot
+const config = {
+  botAvatar: "logo512.png",
+  floating: true,
+};
+
   return (
     <TableHead>
       <TableRow>
@@ -188,6 +242,19 @@ function EnhancedTableHead(props) {
               "aria-label": "select all desserts",
             }}
           />
+          <div className="App">
+            <ThemeProvider theme={theme}>
+                <ChatBot
+ 
+                    // This appears as the header
+                    // text for the chat bot
+                    headerTitle="Forks-insight Chatbot"
+                    steps={steps}
+                    {...config}
+ 
+                />
+            </ThemeProvider>
+        </div>
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -766,7 +833,7 @@ const EnhancedTable = ({ data }) => {
                     {isItemexpended && (
                       <TableRow>
                         <TableCell padding="checkbox" />
-                        <TableCell colSpan="6"><b>AI Summary:</b> </TableCell>
+                        <TableCell colSpan="6"><b>AI Summary:</b> This deploys VS Code on a server by adding a remote subfolder to enable remote connections. It also contains various bug fix and frontend changes.</TableCell>
                       </TableRow>
                     )}
                   </>
@@ -785,7 +852,7 @@ const EnhancedTable = ({ data }) => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[4, 8, 16]}
           component="div"
           count={visibleRows.length}
           rowsPerPage={rowsPerPage}
