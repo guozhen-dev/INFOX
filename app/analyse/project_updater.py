@@ -10,6 +10,7 @@ from . import source_code_analyser
 from .util import word_extractor
 from .util import localfile_tool
 from .clone_crawler import CloneCrawler
+from .openai_api import summarize_change
 from ..models import *
 
 DATABASE_UPDATE_MODE = True
@@ -130,6 +131,9 @@ class ForkUpdater:
 
         project_name_stop_words = (self.project_name + '/' + self.fork_name).split('/')
         self.all_lemmatize_tokens = list(filter(lambda x: x not in project_name_stop_words, self.all_lemmatize_tokens))
+        
+        # Now we generate AI summary for the fork.
+        summarization = summarize_change(compare_result)
 
         # Update forks into database.
         ProjectFork(
@@ -152,6 +156,7 @@ class ForkUpdater:
             variable=word_extractor.get_top_words(changed_code_name_list, 10),
             function_name=word_extractor.get_top_words(changed_code_func_list, 10),
             last_updated_time=datetime.utcnow(),
+            ai_summary=summarization
             # key_stemmed_words=word_extractor.get_top_words(self.all_stemmed_tokens, 10),
             # key_stemmed_words_dict=word_extractor.get_top_words(self.all_stemmed_tokens, 10, False),
         ).save()

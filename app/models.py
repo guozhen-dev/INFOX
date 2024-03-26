@@ -52,6 +52,7 @@ class ProjectFork(db.Document):
     key_words_lemmatize_tfidf_dict = db.DictField()
     tags = db.ListField(field=db.StringField())
     last_updated_time = db.DateTimeField()
+    ai_summary = db.StringField()
 
     # For compatibility old version.
     key_words_by_tdidf = db.ListField(field=db.StringField())
@@ -164,4 +165,3 @@ class TagType:
     BUG_FIX = 3
     CONFIGURE = 4
     OTHER = 5
-

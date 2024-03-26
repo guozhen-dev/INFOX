@@ -210,16 +210,17 @@ class ForkList(Resource):
                 "key_words": fork["key_words"],
                 "tags": fork["tags"],
                 "total_commit_number": fork["total_commit_number"],
-                "last_committed_time": str(fork["last_committed_time"]),
+                "last_committed_time": str(fork["last_committed_time"].date()),
                 "created_time": str(fork["created_time"]),
                 "weekly_commit_freq": get_commit_number_per_week(fork["fork_name"],  _user.github_access_token),
                 "hourly_commit_freq": get_commit_number_per_hour(fork["fork_name"],  _user.github_access_token),
+                "ai_summary": fork['ai_summary']
+
             }
         )
         return {"forks": return_list}
 
     def get(self):
-        print(request.headers)
         auth_data = json.loads(request.headers.get("Authorization"))
         current_user = auth_data.get('login')
         current_token = auth_data.get('token')
