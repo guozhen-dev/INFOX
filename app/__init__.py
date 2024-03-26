@@ -103,6 +103,11 @@ def create_app(config_name):
         resource_class_kwargs={"jwt": jwt},
     )
 
+    api.add_resource(
+        Chat,
+        "/flask/chat"
+    )
+    
     # TODO: get correct host, broker and backend depending on environment
     redis_host = "redis://localhost:6379/0"
     celery.conf.broker_url = redis_host
