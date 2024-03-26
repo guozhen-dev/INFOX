@@ -30,8 +30,84 @@ import { usePage } from "./PageContext";
 import { useAuth } from "./AuthContext";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import ChatBot  from './react-simple-chatbot/ChatBot';
+import ChatBot from './react-simple-chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
+import axios from "axios";
+import { SERVER } from "./common/constants";
+
+const GeneralQuestionComponent = ({ steps, triggerNextStep, repoName }) => {
+  const [response, setResponse] = useState('');
+  const { user } = useAuth();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log(repoName);
+        const result = await axios({
+          method: 'POST',
+          url: `${SERVER}/flask/chat`,
+          data: {
+            message: steps['api_call_general_question'].message,
+            repo: repoName,
+          },
+          headers: {
+            'Authorization': JSON.stringify(user)
+          },
+        });
+        const data = result.data;
+        setResponse(data['message']); // Assume the API returns a JSON object with a message field
+        triggerNextStep({ value: data.message, trigger: 'Ask_again' });
+      } catch (error) {
+        console.error('API call failed:', error);
+        triggerNextStep({ value: 'Sorry, I encountered an error.', trigger: 'error_step' });
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return <div>{response ? response : 'Loading...'}</div>;
+};
+
+
+const ForkSpecificQuestionComponent = ({ steps, triggerNextStep, repoName}) => {
+  const [response, setResponse] = useState('');
+  const { user } = useAuth();
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log({
+        message: steps['api_call_fork_specific_question'].message,
+        repo: repoName,
+        fork: steps['4'].value,
+      });
+      try {
+        console.log(repoName);
+        const result = await axios({
+          method: 'POST',
+          url: `${SERVER}/flask/chat`,
+          data: {
+            message: steps['api_call_fork_specific_question'].message,
+            repo: repoName,
+            fork: steps['4'].value,
+          },
+          headers: {
+            'Authorization': JSON.stringify(user)
+          },
+        });
+        const data = result.data;
+        setResponse(data['message']); // Assume the API returns a JSON object with a message field
+        triggerNextStep({ value: data.message, trigger: 'Ask_again' });
+      } catch (error) {
+        console.error('API call failed:', error);
+        triggerNextStep({ value: 'Sorry, I encountered an error.', trigger: 'error_step' });
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return <div>{response ? response : 'Loading...'}</div>;
+};
+
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -45,7 +121,8 @@ function createData(
   total_commit_number,
   key_words,
   last_committed_time,
-  created_time
+  created_time,
+  ai_summary
 ) {
 
   // console.log("key words received:", key_words)
@@ -71,6 +148,7 @@ function createData(
     key_words,
     last_committed_time,
     created_time,
+    ai_summary
   };
 }
 
@@ -163,6 +241,8 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    repoName,
+    forkList
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -170,55 +250,96 @@ function EnhancedTableHead(props) {
 
   const steps = [
     {
-        id: '0',
-        message: 'Hello, what can I do for you today?',
- 
-        // This calls the next id
-        // i.e. id 1 in this case
-        trigger: '1',
+      id: '0',
+      message: `Hello, what can I do for you today? Seems you are interested in the forks for ${repoName}. Are you looking into a specific fork or you are having general questions?`,
+
+      // This calls the next id
+      // i.e. id 1 in this case
+      trigger: '1',
     }, {
-        id: '1',
- 
-        // This message appears in
-        // the bot chat bubble
-        user: true,
-        trigger: '2'
+      id: '1',
+      options: [
+        { value: 1, label: 'General Questions', trigger: '2' },
+        { value: 2, label: 'A specific fork', trigger: '3' },
+      ],
     }, {
-        id: '2',
- 
-        // Here we want the user
-        // to enter input
-        message: 'Considering the code differences and information given, you should focus on the fork located at gitpod.io/openvscode-server. This fork primarily concentrates on enhancing the remote connectivity of the VS Code server, in addition to implementing several bug fixes and front-end modifications.',
-        trigger: '3',
+      id: '2',
+
+      // Here we want the user
+      // to enter input
+      message: 'Sure, what would you like to know about the forks? I am ready to help you.',
+      trigger: 'api_call_general_question'// Jump to chatgpt
     }, {
-        id: '3',
-        user: true,
-        trigger: 4
+      id: '2fork',
+
+      // Here we want the user
+      // to enter input
+      message: 'Sure, what would you like to know about this fork? I am ready to help you.',
+      trigger: 'api_call_fork_specific_question'// Jump to chatgpt
+    },
+     {
+      id: '3',
+      message: 'Which specific fork are you interested in?',
+      trigger: 4
     }, {
-        id: '4',
-        message: 'Sure, please let me know if you need any further assistance.',
-        end: true
+      id: '4',
+      options: forkList.map((row) => {
+        return { value: row.fork_name, label: row.fork_name, trigger: '2fork' }
+      }),
+      // end: true
+    }, {
+      id: 'api_call_general_question',
+      user: true,
+      trigger: 'general_api_call'
+      // end: true
+    }, {
+      id: 'api_call_fork_specific_question',
+      user: true,
+      trigger: 'fork_specific_api_call'
+      // end: true
+    }, {
+      id: 'general_api_call',
+      component: <GeneralQuestionComponent repoName={repoName} />,
+      asMessage: true,
+      waitAction: true,
+      trigger: 'Ask_again',
+    }, {
+      id: 'Ask_again',
+      message: 'Do you have any other questions I can help you with?',
+      trigger: 'api_call_general_question'
+    },
+    {
+      id: 'fork_specific_api_call',
+      component: <ForkSpecificQuestionComponent repoName={repoName} />,
+      asMessage: true,
+      waitAction: true,
+      trigger: 'Ask_again',
+    },
+    {
+      id: 'error_step',
+      message: 'Sorry, I encountered an error. Please try again.',
+      trigger: '0'
     }
-];
+  ];
 
-const theme = {
-  background: '#C9FF8F',
-  fontFamily: 'Arial',
-  headerBgColor: '#197B22',
-  headerFontSize: '20px',
-  botBubbleColor: '#0F3789',
-  headerFontColor: 'white',
-  botFontColor: 'white',
-  userBubbleColor: '#FF5733',
-  userFontColor: 'white',
-  fontSize: '5px',
-};
+  const theme = {
+    background: '#C9FF8F',
+    fontFamily: 'Arial',
+    headerBgColor: '#197B22',
+    headerFontSize: '20px',
+    botBubbleColor: '#0F3789',
+    headerFontColor: 'white',
+    botFontColor: 'white',
+    userBubbleColor: '#FF5733',
+    userFontColor: 'white',
+    fontSize: '5px',
+  };
 
-// Set some properties of the bot
-const config = {
-  botAvatar: "logo512.png",
-  floating: true,
-};
+  // Set some properties of the bot
+  const config = {
+    botAvatar: "logo512.png",
+    floating: true,
+  };
 
   return (
     <TableHead>
@@ -235,17 +356,17 @@ const config = {
           />
           <div className="App">
             <ThemeProvider theme={theme}>
-                <ChatBot
- 
-                    // This appears as the header
-                    // text for the chat bot
-                    headerTitle="Forks-insight Chatbot"
-                    steps={steps}
-                    {...config}
- 
-                />
+              <ChatBot
+
+                // This appears as the header
+                // text for the chat bot
+                headerTitle="Forks-insight Chatbot"
+                steps={steps}
+                {...config}
+
+              />
             </ThemeProvider>
-        </div>
+          </div>
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -280,6 +401,8 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
+  repoName: PropTypes.string.isRequired,
+  forkList: PropTypes.array.isRequired
 };
 
 const EnhancedTableToolbar = (props) => {
@@ -361,7 +484,8 @@ const EnhancedTable = ({ data }) => {
         value.total_commit_number ?? 0,
         value.key_words,
         value.last_committed_time,
-        value.created_time
+        value.created_time,
+        value.ai_summary
       )
     );
   });
@@ -519,14 +643,14 @@ const EnhancedTable = ({ data }) => {
     setOpen(false);
   }
 
-  function getCurrentURL () {
+  function getCurrentURL() {
     return window.location.href
   }
-  
+
 
   const isSelected = (fork) => selected.indexOf(fork) !== -1;
   const isExpanded = (fork) => expanded.indexOf(fork) !== -1;
-  const { pageParam, setPageParam }= usePage();
+  const { pageParam, setPageParam } = usePage();
   // const [isExpanded, setIsExpanded] = useState(false);
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -693,10 +817,10 @@ const EnhancedTable = ({ data }) => {
       type: "string",
       value: keywordSearch,
     }
-    if(keywordSearch != ""){
+    if (keywordSearch != "") {
       setKeywordFilter([newFilter]);
     }
-    
+
   }
 
   const handleFileNameSearch = (e) => {
@@ -706,18 +830,18 @@ const EnhancedTable = ({ data }) => {
       type: "string",
       value: fileNameSearch,
     }
-    if(fileNameSearch != ""){
+    if (fileNameSearch != "") {
       setFileNameFilter([newFilter]);
     }
-    
+
   }
 
   return (
     <Box sx={{ width: "100%" }}>
       <Typography variant="h3"
-                  sx={{m:2}}>
+        sx={{ m: 2 }}>
         {pageParam.split("/")[1].concat('/').concat(pageParam.split("/")[2])}</Typography>
-      <Paper sx={{ width: "100%", mb: 2, mt:1 }}>
+      <Paper sx={{ width: "100%", mb: 2, mt: 1 }}>
         <Box>
           {!isEmpty(filtersWithValues) ?
             <Box>
@@ -755,6 +879,8 @@ const EnhancedTable = ({ data }) => {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={visibleRows.length}
+              repoName={pageParam.split("/")[1].concat('/').concat(pageParam.split("/")[2])}
+              forkList={visibleRows}
             />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
@@ -768,66 +894,66 @@ const EnhancedTable = ({ data }) => {
 
                   return (
                     <>
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.fork_name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                          onClick={(event) => handleClick(event, row)}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.fork_name}
+                        selected={isItemSelected}
                       >
-                        {row.fork_name}
-                      </TableCell>
-                      <TableCell align="left">
-                        {row.num_changed_files}
-                      </TableCell>
-                      {/* <TableCell align="left">
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                            onClick={(event) => handleClick(event, row)}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          {row.fork_name}
+                        </TableCell>
+                        <TableCell align="left">
+                          {row.num_changed_files}
+                        </TableCell>
+                        {/* <TableCell align="left">
                         {row.parsed_files}
                       </TableCell> */}
-                      <TableCell align="left">
-                        {row.num_changed_lines}
-                      </TableCell>
-                      <TableCell align="left">
-                        {row.total_commit_number}
-                      </TableCell>
-                      {/* <TableCell align="left">
+                        <TableCell align="left">
+                          {row.num_changed_lines}
+                        </TableCell>
+                        <TableCell align="left">
+                          {row.total_commit_number}
+                        </TableCell>
+                        {/* <TableCell align="left">
                         {row.parsed_words}
                       </TableCell> */}
-                      <TableCell align="left">
-                        {row.last_committed_time}
-                      </TableCell>
-                      {/* <TableCell align="left">
+                        <TableCell align="left">
+                          {row.last_committed_time}
+                        </TableCell>
+                        {/* <TableCell align="left">
                         {row.created_time}
                       </TableCell> */}
-                      <TableCell align="left">
-                        <Button size="small" onClick={(event) => handleExpand(event, row)}>
-                        {isItemexpended ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                    {isItemexpended && (
-                      <TableRow>
-                        <TableCell padding="checkbox" />
-                        <TableCell colSpan="6"><b>AI Summary:</b> This deploys VS Code on a server by adding a remote subfolder to enable remote connections. It also contains various bug fix and frontend changes.</TableCell>
+                        <TableCell align="left">
+                          <Button size="small" onClick={(event) => handleExpand(event, row)}>
+                            {isItemexpended ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                          </Button>
+                        </TableCell>
                       </TableRow>
-                    )}
-                  </>
+                      {isItemexpended && (
+                        <TableRow>
+                          <TableCell padding="checkbox" />
+                          <TableCell colSpan="6"><b>AI Summary:</b> {row.ai_summary} </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   );
                 })}
               {emptyRows > 0 && (
@@ -916,11 +1042,11 @@ const ForkList = () => {
 
   const fetchForks = useCallback(async (repo) => {
     console.log("fuck", pageParam);
-    const [ _, repo1, repo2] = pageParam.split('/');
+    const [_, repo1, repo2] = pageParam.split('/');
     console.log("repo1", repo1);
-    console.log('repo1',repo1);
+    console.log('repo1', repo1);
     console.log('repo2', repo2);
-    
+
 
     //get total num of forks needs to be fetched
     const active_fork_num = await getTotalForksNumber(repo, user);
@@ -930,10 +1056,10 @@ const ForkList = () => {
     let total_list = []
     let i = 0
     while (i < active_fork_num.data) {
-        let res = await getRepoForks(repo, i, user);
-        total_list.push(res.data.forks[0])
-        i += 1
-        setCounter(i)
+      let res = await getRepoForks(repo, i, user);
+      total_list.push(res.data.forks[0])
+      i += 1
+      setCounter(i)
     }
     console.log(total_list)
     setData(total_list);
@@ -948,7 +1074,7 @@ const ForkList = () => {
   }, [fetchForks]);
 
   return (
-    <>{data ? <EnhancedTable data={data} /> : <Loading loadingMessage={"There are " + activeForksNum + " active forks in total, currently " + counter+ " analyzed."}></Loading>}</>
+    <>{data ? <EnhancedTable data={data} /> : <Loading loadingMessage={"There are " + activeForksNum + " active forks in total, currently " + counter + " analyzed."}></Loading>}</>
   );
 };
 

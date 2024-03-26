@@ -29,7 +29,7 @@ const Bubble = styled.div`
     const { isFirst, showAvatar, user } = props;
 
     if (!isFirst && showAvatar) {
-      return user ? '-8px 46px 10px 0' : '-8px 0 10px 46px';
+      return user ? '-8px 46px 10px 0' : '-8px 0 10px 40px';
     }
 
     if (!isFirst && !showAvatar) {
