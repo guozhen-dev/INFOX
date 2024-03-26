@@ -13,6 +13,7 @@ import FollowRepo from './FollowRepo';
 import { createContext, useEffect } from 'react';
 import { usePage } from './PageContext';
 import ForkList from './Forklist';
+import ForkCluster from './ForkCluster';
 
 function RealApp() {
   const { user, login } = useAuth();
@@ -40,9 +41,9 @@ function RealApp() {
               <Nav.Link onClick={changePage} id='Repositories'>Repositories</Nav.Link>
               <Nav.Link onClick={changePage} id='Follow_Repo'>Import Current</Nav.Link>
               <NavDropdown title="More Functions" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Fork Clustering</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.2">Fork Comparison</NavDropdown.Item>
+                <NavDropdown.Item onClick={changePage} id='Fork_Cluster'>Fork Clustering</NavDropdown.Item>
+                {/* <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.2">Fork Comparison</NavDropdown.Item> */}
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.3">Conflict Detection</NavDropdown.Item>
               </NavDropdown>
@@ -56,6 +57,7 @@ function RealApp() {
         {curr_page === 1 ? <Repositories /> : null}
         {curr_page === 2 ? <FollowRepo /> : null}
         {curr_page === 3 ? <ForkList /> : null}
+        {curr_page === 4 ? <ForkCluster /> : null}
       </Container>
     </Container>
   );

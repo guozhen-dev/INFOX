@@ -14,6 +14,7 @@ export const PageProvider = ({ children }) => {
     "Repositories": 1,
     "Follow_Repo": 2,
     "Fork_List": 3,
+    "Fork_Cluster": 4,
   };
   const [pageParam, setPageParam]= useState(null);
   const value = {

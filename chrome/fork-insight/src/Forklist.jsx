@@ -370,7 +370,7 @@ const EnhancedTable = ({ data }) => {
   const [selected, setSelected] = useState([]);
   const [expanded, setExpanded] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(4);
   const [visibleRows, setVisibleRows] = useState(rows);
   const [commonKeywords, setCommonKeywords] = useState([]);
   const [commonFiles, setCommonFiles] = useState([]);
