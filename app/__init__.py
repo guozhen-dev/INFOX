@@ -12,6 +12,7 @@ from .api.ImportRepositories import ImportRepositories
 from .api.SearchGithub import SearchGithub
 from .api.FollowRepository import FollowRepository
 from .api.Auth import Auth
+from .api.Chat import Chat
 from .api.ForkList import ForkList
 from .api.ForkClustering import ForkClustering
 from .db import initialize_db
