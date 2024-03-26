@@ -632,9 +632,8 @@ const EnhancedTable = ({ data }) => {
     setCommonFiles(commonFilesTempTwo);
     setDisplayCompare(true);
     handleOpen();
-
-    console.log(commonKeywordsTempTwo)
-    console.log(comparisonFiles)
+    console.log("Keywords:", commonKeywordsTempTwo)
+    console.log("compareFiles:", comparisonFiles)
   };
 
   const handleOpen = () => {
@@ -1019,14 +1018,14 @@ const ComparisonDialogue = ({ open, commonKeywords, commonFiles, onClose }) => {
       <DialogTitle>Fork Comparison</DialogTitle>
       <DialogContent>
         <Box sx={{ display: "flex" }}>
-          {commonKeywords.length > 0 && <Paper sx={{ width: "50%", padding: 1, marginRight: 1 }}>
-            <Typography variant="h6">Common Words from Selected Forks</Typography>
-            <Typography paragraph>{commonKeywords}</Typography>
-          </Paper>}
-          {commonFiles.length > 0 && <Paper sx={{ width: "50%", padding: 1 }}>
-            <Typography variant="h6">Common Files Changed from Selected Forks</Typography>
-            <Typography paragraph>{commonFiles}</Typography>
-          </Paper>}
+          <Paper sx={{ width: "50%", padding: 1, marginRight: 1 }}>
+            <Typography variant="h6">Common Words:</Typography>
+            <Typography paragraph>{commonKeywords.length > 0 ? commonKeywords : "No common words found"}</Typography>
+          </Paper>
+          <Paper sx={{ width: "50%", padding: 1 }}>
+            <Typography variant="h6">Common Files Changes:</Typography>
+            <Typography paragraph>{ commonFiles.length > 0 ? commonFiles : "No common file changes found"}</Typography>
+          </Paper>
         </Box>
       </DialogContent>
 
