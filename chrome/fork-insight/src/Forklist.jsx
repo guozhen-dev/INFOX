@@ -34,6 +34,8 @@ import ChatBot from './react-simple-chatbot/ChatBot';
 import { ThemeProvider } from 'styled-components';
 import axios from "axios";
 import { SERVER } from "./common/constants";
+import { IoMdCopy } from "react-icons/io";
+import { Tooltip } from 'react-tooltip'
 
 const GeneralQuestionComponent = ({ steps, triggerNextStep, repoName }) => {
   const [response, setResponse] = useState('');
@@ -919,6 +921,10 @@ const EnhancedTable = ({ data }) => {
                           padding="none"
                         >
                           {row.fork_name}
+                          <Tooltip anchorSelect=".copy_button" place="top">
+                            Copy Fork
+                          </Tooltip>
+                          <IoMdCopy className="copy_button" style={{ cursor: 'pointer' }} onClick={() => {navigator.clipboard.writeText(row.fork_name)}}/>  
                         </TableCell>
                         <TableCell align="left">
                           {row.num_changed_files}
