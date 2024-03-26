@@ -2,24 +2,77 @@
 from datetime import datetime
 from flask import g, render_template, redirect, request, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
+import datetime
 
+import requests
+import base64
+import json
 from . import auth
-
-from .. import github
+from .. import github, db 
 from ..models import User, Permission
 from ..analyse.util import localfile_tool
-
+from dotenv import load_dotenv
+import os
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
-    next_url = request.args.get("next") or url_for("main.index")
+    # Client login with a token
+    code = request.args.get("code")
+    if code:
+        # we got a code let's exchange it for an access token
+        load_dotenv()
+        data = {
+            "client_id": "8a79ee6701d1e06c6c58",
+            "client_secret": os.getenv('GH_SECRET'),
+            "code": code,
+        }
+        # exchange the 'code' for an access token
+        res = requests.post(
+            url="https://github.com/login/oauth/access_token",
+            data=data,
+            headers={"Accept": "application/json"},
+        )
+        res_json = res.json()
+        access_token = res_json["access_token"]
 
-    # TODO: Set redirect URI based on environment
-    # return github.authorize(scope="user:email", redirect_uri="http://forks-insight.com/auth/callback?next=%s" % next_url)
-    return github.authorize(
-        scope="user:email",
-        redirect_uri="http://localhost:5000/auth/callback?next=%s" % next_url,
-    )
+        # get the user details using the access token
+        res = requests.get(
+            url="https://api.github.com/user",
+            headers={
+                "Accept": "application/json",
+                "Authorization": "token {}".format(access_token),
+            },
+        )
+        if res.status_code != 200:
+            raise AssertionError
+        res_json = res.json()
+        print(res_json)
+    extension_id = "bhnejeodnednfpfclmdkcgcokcahejjb"
+    return_body = {
+        "username": res_json['name'],
+        "login": res_json['login'],
+        "token": access_token
+    }
+    # now we encode the return body to send it back to the client
+    return_data = base64.b64encode(json.dumps(return_body).encode('ascii')).decode('ascii')
+
+    # Now we check if the user exists
+    user = User.objects(username=res_json['login']).first()
+    if user:
+        user.github_access_token = access_token
+        user.last_seen = datetime.datetime.now()
+        user.save()
+    # Otherwise, we create a new user.
+    else:
+        new_user = User()
+        new_user.username = res_json['login']
+        new_user.github_access_token = access_token
+        new_user.last_seen = datetime.datetime.now()
+        new_user.save()
+
+    return redirect(f"https://{extension_id}.chromiumapp.org/{return_data}", code=302)
+
+
 
 
 @auth.route("/logout", methods=["GET", "POST"])

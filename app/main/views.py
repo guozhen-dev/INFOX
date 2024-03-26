@@ -1,5 +1,6 @@
-from flask import g, jsonify, Markup, render_template, redirect, url_for, current_app, abort, flash, request, \
+from flask import g, jsonify, render_template, redirect, url_for, current_app, abort, flash, request, \
     make_response
+from markupsafe import Markup
 from flask_login import login_required, current_user
 from datetime import datetime
 from mongoengine.queryset.visitor import Q

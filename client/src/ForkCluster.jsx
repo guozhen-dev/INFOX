@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { getForkClustering } from "./repository";
 import { ResponsiveNetworkCanvas,ResponsiveNetwork } from "@nivo/network";
-import ReactWordcloud from "react-wordcloud";
+import ReactWordcloud from "@cyberblast/react-wordcloud";
 import {
   Box,
   Button,

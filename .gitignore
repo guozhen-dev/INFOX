@@ -1,7 +1,8 @@
-.idea
-.DS_Store
-.vscode
-ghostdriver.log
-*.pyc
-.coverage
+chrome-extension
 venv
+.tmp
+*/.tmp
+__pycache__
+*/__pycache__
+__pycache__/*
+

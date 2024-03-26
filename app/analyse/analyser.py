@@ -102,7 +102,7 @@ def get_active_forks(repo, access_token):
         return []
     active_forks_page = BeautifulSoup(forks_page.content, "html.parser")
 
-    for active_fork in active_forks_page.find_all("a", {"class":"no-underline f4"}):
+    for active_fork in active_forks_page.find_all("a", {"class":"Link f4"}):
         active_fork_name.append(active_fork.get('href'))
 
     for name in active_fork_name:
@@ -115,8 +115,6 @@ def get_active_forks(repo, access_token):
             },
         ) 
         active_forks.append(res.json())
-
-    # print(active_forks)
 
     return active_forks
 

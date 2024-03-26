@@ -12,9 +12,11 @@ from .api.ImportRepositories import ImportRepositories
 from .api.SearchGithub import SearchGithub
 from .api.FollowRepository import FollowRepository
 from .api.Auth import Auth
+from .api.Chat import Chat
 from .api.ForkList import ForkList
 from .api.ForkClustering import ForkClustering
 from .db import initialize_db
+from flask_pymongo import PyMongo
 from .loginmanager import login_manager
 from .mail import mail
 from datetime import timedelta
@@ -62,8 +64,7 @@ def create_app(config_name):
     app.config["JWT_ACCESS_LIFESPAN"] = {"hours": 24}
     app.config["JWT_REFRESH_LIFESPAN"] = {"days": 30}
 
-    # setup github-flask
-    initialize_db(app)
+    db.initialize_db(app)
     bootstrap.init_app(app)
     mail.init_app(app)
     github.init_app(app)
@@ -76,8 +77,7 @@ def create_app(config_name):
 
     api.add_resource(
         FollowedRepositories,
-        "/flask/followed",
-        resource_class_kwargs={"jwt": jwt},
+        "/flask/followed"
     )
     api.add_resource(
         ImportRepositories,
@@ -93,7 +93,6 @@ def create_app(config_name):
     api.add_resource(
         FollowRepository,
         "/flask/follow",
-        resource_class_kwargs={"jwt": jwt},
     )
     api.add_resource(
         ForkClustering, "/flask/cluster", resource_class_kwargs={"jwt": jwt}
@@ -105,8 +104,13 @@ def create_app(config_name):
         resource_class_kwargs={"jwt": jwt},
     )
 
+    api.add_resource(
+        Chat,
+        "/flask/chat"
+    )
+    
     # TODO: get correct host, broker and backend depending on environment
-    redis_host = "redis://redis:6379/0"
+    redis_host = "redis://localhost:6379/0"
     celery.conf.broker_url = redis_host
     celery.conf.result_backend = redis_host
     # celery.init_app(app)

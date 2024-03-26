@@ -14,18 +14,18 @@ class ChangedFile(db.Document):
     # Too big may cause performance problem.
     # changed_code = db.StringField()
     changed_line_number = db.IntField()
-    key_words = db.ListField(db.StringField())
+    key_words = db.ListField(field=db.StringField())
     key_words_dict = db.DictField()
-    key_words_tfidf = db.ListField(db.StringField())
+    key_words_tfidf = db.ListField(field=db.StringField())
     key_words_tf_idf_dict = db.DictField()
-    key_stemmed_words = db.ListField(db.StringField())
+    key_stemmed_words = db.ListField(field=db.StringField())
     key_stemmed_words_dict = db.DictField()
-    key_words_lemmatize_tfidf = db.ListField(db.StringField())
+    key_words_lemmatize_tfidf = db.ListField(field=db.StringField())
     key_words_lemmatize_tfidf_dict = db.DictField()
 
-    variable = db.ListField(db.StringField())
-    class_name = db.ListField(db.StringField())
-    function_name = db.ListField(db.StringField())
+    variable = db.ListField(field=db.StringField())
+    class_name = db.ListField(field=db.StringField())
+    function_name = db.ListField(field=db.StringField())
 
 
 class ProjectFork(db.Document):
@@ -39,28 +39,29 @@ class ProjectFork(db.Document):
     total_changed_line_number = db.IntField()
     total_changed_file_number = db.IntField()
     total_commit_number = db.IntField()
-    file_list = db.ListField(db.StringField())
-    commit_list = db.ListField(db.DictField())
-    commit_freq = db.ListField(db.IntField())
-    key_words = db.ListField(db.StringField())
+    file_list = db.ListField(field=db.StringField())
+    commit_list = db.ListField(field=db.DictField())
+    commit_freq = db.ListField(field=db.IntField())
+    key_words = db.ListField(field=db.StringField())
     key_words_dict = db.DictField()
-    key_words_tfidf = db.ListField(db.StringField())
+    key_words_tfidf = db.ListField(field=db.StringField())
     key_words_tf_idf_dict = db.DictField()
-    key_stemmed_words = db.ListField(db.StringField())
+    key_stemmed_words = db.ListField(field=db.StringField())
     key_stemmed_words_dict = db.DictField()
-    key_words_lemmatize_tfidf = db.ListField(db.StringField())
+    key_words_lemmatize_tfidf = db.ListField(field=db.StringField())
     key_words_lemmatize_tfidf_dict = db.DictField()
-    tags = db.ListField(db.StringField())
+    tags = db.ListField(field=db.StringField())
     last_updated_time = db.DateTimeField()
+    ai_summary = db.StringField()
 
     # For compatibility old version.
-    key_words_by_tdidf = db.ListField(db.StringField())
-    key_words_by_tfidf = db.ListField(db.StringField())
+    key_words_by_tdidf = db.ListField(field=db.StringField())
+    key_words_by_tfidf = db.ListField(field=db.StringField())
     key_words_counter_dict = db.DictField()
 
-    tags = db.ListField(db.StringField())
-    variable = db.ListField(db.StringField())
-    function_name = db.ListField(db.StringField())
+    tags = db.ListField(field=db.StringField())
+    variable = db.ListField(field=db.StringField())
+    function_name = db.ListField(field=db.StringField())
 
 
 class Project(db.Document):
@@ -74,12 +75,12 @@ class Project(db.Document):
     analyser_progress = db.StringField()
     project_name_show = db.StringField()
     last_updated_time = db.DateTimeField()
-    common_fork_keywords = db.ListField(db.StringField())
+    common_fork_keywords = db.ListField(field=db.StringField())
 
 class ProjectCluster(db.Document):
     project_name = db.StringField(required=True, primary_key=True)
-    nodes = db.ListField(db.DictField())
-    links = db.ListField(db.DictField())
+    nodes = db.ListField(field=db.DictField())
+    links = db.ListField(field=db.DictField())
     key_words = db.DictField()
     top_common_words = db.DictField()
     timestamp = db.DateTimeField()
@@ -89,7 +90,7 @@ class ForkTag(db.Document):
     fork_full_name = db.StringField(required=True)
     project_name = db.StringField(required=True)
     username = db.StringField(required=True)
-    tags = db.ListField(db.StringField())
+    tags = db.ListField(field=db.StringField())
 
 
 class User(UserMixin, db.Document):
@@ -97,8 +98,8 @@ class User(UserMixin, db.Document):
     email = db.StringField()
     permission = db.IntField()
     last_seen = db.DateTimeField()
-    followed_projects = db.ListField(db.StringField())
-    followed_forks = db.ListField(db.StringField())  # not used
+    followed_projects = db.ListField(field=db.StringField())
+    followed_forks = db.ListField(field=db.StringField())  # not used
     followed_projects_time = db.DictField()
 
     github_access_token = db.StringField()
@@ -111,7 +112,7 @@ class User(UserMixin, db.Document):
     owned_repo_sync_time = db.DateTimeField()
 
     is_crawling = db.IntField()  # 1 means is crawling
-    repo_waiting_list = db.ListField(db.StringField())
+    repo_waiting_list = db.ListField(field=db.StringField())
 
     repo_email_time = db.DictField()
 
@@ -164,4 +165,3 @@ class TagType:
     BUG_FIX = 3
     CONFIGURE = 4
     OTHER = 5
-

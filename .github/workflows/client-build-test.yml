@@ -20,4 +20,4 @@ jobs:
       - name: set up environment npm install
         run: cd chrome/fork-insight && ./build.sh
       - name: test the index.html is generated
-        run: test chrome-extension/index.html 
+        run: test -f chrome/chrome-extension/index.html 

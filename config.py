@@ -15,7 +15,7 @@ class Config:
 
     MONGODB_SETTINGS = {
         "db": "forks-insights",
-        "host": "mongodb+srv://admin:infox123@forks-insights.lktn4iv.mongodb.net/INFOX?retryWrites=true&w=majority&ssl=true",  # Replace this with the host string mongodb+srv://....
+        "host": "mongodb+srv://infox:infox123@infox.wrv4p70.mongodb.net/?retryWrites=true&w=majority&appName=infox",  # Replace this with the host string mongodb+srv://....
     }
 
     # TODO: get this from environment
@@ -55,7 +55,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     USE_LOCAL_FORKS_LIST = True
-    USE_LOCAL_FORK_INFO = True
+    USE_LOCAL_FORK_INFO = False
     FORCED_UPDATING = (
         True  # Refresh will re-crawler the forks' info even if it's up-to-date.
     )
