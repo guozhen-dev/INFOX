@@ -65,8 +65,9 @@ function FollowRepo() {
     }, tabs => {
       let currentUrl = new URL(tabs[0].url);
       if (currentUrl.hostname === "github.com") {
-        setCurrentRepoUrl(tabs[0].url);
-        setCurrentRepoName(currentUrl.toString().split('/').pop());
+        const firstTwoLevelsPath = currentUrl.pathname.split('/').filter(part => part).slice(0, 2).join('/');
+        setCurrentRepoUrl(`${currentUrl.protocol}//${currentUrl.host}/${firstTwoLevelsPath}`);
+        setCurrentRepoName(currentUrl.toString().split('/')[4]);
         setDisableSubmit(false);
         debugger;
       } else {
