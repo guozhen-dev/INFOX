@@ -79,7 +79,7 @@ const ForkSpecificQuestionComponent = ({ steps, triggerNextStep, repoName}) => {
       console.log({
         message: steps['api_call_fork_specific_question'].message,
         repo: repoName,
-        fork: steps['4'].value,
+        fork: steps['choose_fork_mode'].value == 3 ? steps['4'].value : steps['manual_input'].message,
       });
       try {
         console.log(repoName);
@@ -89,7 +89,7 @@ const ForkSpecificQuestionComponent = ({ steps, triggerNextStep, repoName}) => {
           data: {
             message: steps['api_call_fork_specific_question'].message,
             repo: repoName,
-            fork: steps['4'].value,
+            fork: steps['choose_fork_mode'].value == 3 ? steps['4'].value : steps['manual_input'].message,
           },
           headers: {
             'Authorization': JSON.stringify(user)
@@ -282,8 +282,37 @@ function EnhancedTableHead(props) {
      {
       id: '3',
       message: 'Which specific fork are you interested in?',
-      trigger: 4
-    }, {
+      trigger: 'choose_fork_mode'
+    }, 
+    {
+      id: 'choose_fork_mode',
+      options: [
+        { value: 3, label: 'List all forks', trigger: '4' },
+        { value: 4, label: 'Manual Input', trigger: 'ask_manual_input' },
+      ],
+    },
+    {
+      id: 'ask_manual_input',
+
+      // Here we want the user
+      // to enter input
+      message: 'Please type in the name of the fork.',
+      trigger: 'manual_input'// Jump to chatgpt
+    },
+    {
+      id: 'manual_input',
+      user: true,
+      validator: (value) => {
+        if (forkList.some(row => value == row.fork_name)) {
+          return true;
+        } else {
+          return 'Please enter a valid fork name';
+        }
+      },
+      trigger: '2fork'
+      // end: true
+    },
+    {
       id: '4',
       options: forkList.map((row) => {
         return { value: row.fork_name, label: row.fork_name, trigger: '2fork' }
